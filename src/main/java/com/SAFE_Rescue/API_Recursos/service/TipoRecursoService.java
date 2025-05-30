@@ -16,6 +16,8 @@ import java.util.NoSuchElementException;
 @Service
 public class TipoRecursoService {
 
+    // REPOSITORIOS INYECTADOS
+
     @Autowired
     private TipoRecursoRepository tipoRecursoRepository;
 
@@ -90,6 +92,8 @@ public class TipoRecursoService {
         }
         tipoRecursoRepository.deleteById(id);
     }
+
+    // MÉTODOS PRIVADOS DE VALIDACIÓN Y UTILIDADES
 
     /**
      * Valida los datos de un tipo de recurso

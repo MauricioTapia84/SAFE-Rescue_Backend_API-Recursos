@@ -18,6 +18,8 @@ import java.util.NoSuchElementException;
 @RequestMapping("/api-recursos/v1/vehiculos")
 public class VehiculoController {
 
+    // SERVICIOS INYECTADOS
+
     @Autowired
     private VehiculoService vehiculoService;
 
@@ -104,7 +106,7 @@ public class VehiculoController {
     public ResponseEntity<String> eliminarVehiculo(@PathVariable long id) {
         try {
             vehiculoService.delete(id);
-            return ResponseEntity.ok("Vehiculoeliminado con éxito.");
+            return ResponseEntity.ok("Vehiculo eliminado con éxito.");
         } catch (NoSuchElementException e) {
             return ResponseEntity.status(HttpStatus.NOT_FOUND)
                     .body("Vehiculo no encontrado");

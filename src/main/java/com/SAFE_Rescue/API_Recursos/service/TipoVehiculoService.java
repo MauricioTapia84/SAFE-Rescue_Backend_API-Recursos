@@ -16,6 +16,8 @@ import java.util.NoSuchElementException;
 @Service
 public class TipoVehiculoService {
 
+    // REPOSITORIOS INYECTADOS
+
     @Autowired
     private TipoVehiculoRepository tipoVehiculoRepository;
 
@@ -90,6 +92,8 @@ public class TipoVehiculoService {
         }
         tipoVehiculoRepository.deleteById(id);
     }
+
+    // MÉTODOS PRIVADOS DE VALIDACIÓN Y UTILIDADES
 
     /**
      * Valida los datos de un tipo de Vehiculo

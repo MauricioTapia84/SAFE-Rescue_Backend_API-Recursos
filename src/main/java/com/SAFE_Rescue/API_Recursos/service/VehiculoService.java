@@ -23,9 +23,7 @@ import java.util.NoSuchElementException;
 public class VehiculoService {
 
     // REPOSITORIOS INYECTADOS
-    @Autowired
-    private VehiculoRepository vehiculoRepository;
-
+    @Autowired private VehiculoRepository vehiculoRepository;
     @Autowired private TipoVehiculoRepository tipoVehiculoRepository;
 
     // SERVICIOS INYECTADOS
@@ -98,15 +96,27 @@ public class VehiculoService {
                 vehiculoExistente.setTipoVehiculo(vehiculo.getTipoVehiculo());
             }
 
-            if (vehiculoRepository.existsByPatente(vehiculo.getPatente())) {
-                throw new RuntimeException("La Patente ya existe");
-            }
-
             if (vehiculo.getMarca() != null) {
                 if (vehiculo.getMarca().length() > 50) {
                     throw new IllegalArgumentException("El Marca no puede exceder los 50 caracteres");
                 } else {
                     vehiculoExistente.setMarca(vehiculo.getMarca());
+                }
+            }
+
+            if (vehiculo.getModelo() != null) {
+                if (vehiculo.getModelo().length() > 50) {
+                    throw new IllegalArgumentException("El Modelo no puede exceder los 50 caracteres");
+                } else {
+                    vehiculoExistente.setModelo(vehiculo.getModelo());
+                }
+            }
+
+            if (vehiculo.getEstado() != null) {
+                if (vehiculo.getEstado().length() > 50) {
+                    throw new IllegalArgumentException("El Estado no puede exceder los 50 caracteres");
+                } else {
+                    vehiculoExistente.setEstado(vehiculo.getEstado());
                 }
             }
 
@@ -122,11 +132,18 @@ public class VehiculoService {
                 if (vehiculo.getPatente().length() > 6) {
                     throw new IllegalArgumentException("La patente no puede exceder los 6 caracteres");
                 } else {
+                    if (vehiculoRepository.existsByPatente(vehiculo.getPatente())) {
+                        throw new RuntimeException("La Patente ya existe");
+                    }else{
                     vehiculoExistente.setPatente(vehiculo.getPatente());
+                    }
                 }
             }
 
-            validarVehiculo(vehiculoExistente);
+            if (vehiculo.getTipoVehiculo() != null) {
+                validarTipoVehiculo(vehiculo.getTipoVehiculo());
+            }
+
             return vehiculoRepository.save(vehiculoExistente);
         } catch (Exception e) {
             throw new RuntimeException("Error al actualizar vehiculo: " + e.getMessage(), e);
@@ -145,24 +162,14 @@ public class VehiculoService {
         vehiculoRepository.deleteById(id);
     }
 
-    // MÉTODOS DE ASIGNACIÓN DE RELACIONES
-
-    /**
-     * Asigna un tipo de vehiculoa un vehiculo
-     * @param vehiculoId ID del rvehiculo
-     * @param tipoVehiculoId ID del tipo de vehiculo
-     */
-    public void asignarTipoVehiculo(long vehiculoId, long tipoVehiculoId) {
-        Vehiculo vehiculo = vehiculoRepository.findById(vehiculoId)
-                .orElseThrow(() -> new RuntimeException("Vehiculo no encontrado"));
-        TipoVehiculo tipoVehiculo = tipoVehiculoRepository.findById(tipoVehiculoId)
-                .orElseThrow(() -> new RuntimeException("Tipo vehiculo no encontrado"));
-        vehiculo.setTipoVehiculo(tipoVehiculo);
-        vehiculoRepository.save(vehiculo);
-    }
 
     // MÉTODOS PRIVADOS DE VALIDACIÓN Y UTILIDADES
 
+    /**
+     * Valida los datos de un  de Vehiculo
+     * @param vehiculo Vehiculo a validar
+     * @throws IllegalArgumentException Si el Vehiculo no cumple con las reglas de validación
+     */
     private void validarVehiculo(Vehiculo vehiculo) {
 
         if (vehiculoRepository.existsByPatente(vehiculo.getPatente())) {
@@ -171,7 +178,19 @@ public class VehiculoService {
 
         if (vehiculo.getMarca() != null) {
             if (vehiculo.getMarca().length() > 50) {
-                throw new IllegalArgumentException("El Marca no puede exceder los 50 caracteres");
+                throw new IllegalArgumentException("La Marca no puede exceder los 50 caracteres");
+            }
+        }
+
+        if (vehiculo.getModelo() != null) {
+            if (vehiculo.getModelo().length() > 50) {
+                throw new IllegalArgumentException("El Modelo no puede exceder los 50 caracteres");
+            }
+        }
+
+        if (vehiculo.getEstado() != null) {
+            if (vehiculo.getEstado().length() > 50) {
+                throw new IllegalArgumentException("El Estado no puede exceder los 50 caracteres");
             }
         }
 
@@ -202,6 +221,22 @@ public class VehiculoService {
         if (tipoVehiculo.getNombre().length() > 50) {
             throw new IllegalArgumentException("El nombre no puede exceder los 50 caracteres");
         }
+    }
+
+    // MÉTODOS DE ASIGNACIÓN DE RELACIONES
+
+    /**
+     * Asigna un tipo de vehiculoa un vehiculo
+     * @param vehiculoId ID del rvehiculo
+     * @param tipoVehiculoId ID del tipo de vehiculo
+     */
+    public void asignarTipoVehiculo(long vehiculoId, long tipoVehiculoId) {
+        Vehiculo vehiculo = vehiculoRepository.findById(vehiculoId)
+                .orElseThrow(() -> new RuntimeException("Vehiculo no encontrado"));
+        TipoVehiculo tipoVehiculo = tipoVehiculoRepository.findById(tipoVehiculoId)
+                .orElseThrow(() -> new RuntimeException("Tipo vehiculo no encontrado"));
+        vehiculo.setTipoVehiculo(tipoVehiculo);
+        vehiculoRepository.save(vehiculo);
     }
 
 }

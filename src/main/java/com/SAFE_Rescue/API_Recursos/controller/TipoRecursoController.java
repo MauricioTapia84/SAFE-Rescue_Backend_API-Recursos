@@ -18,8 +18,12 @@ import java.util.NoSuchElementException;
 @RequestMapping("/api-recursos/v1/tipos-recursos")
 public class TipoRecursoController {
 
+    // SERVICIOS INYECTADOS
+
     @Autowired
     private TipoRecursoService tipoRecursoService;
+
+    // OPERACIONES CRUD BÁSICAS
 
     /**
      * Obtiene todos los tipos de recursos registrados en el sistema.

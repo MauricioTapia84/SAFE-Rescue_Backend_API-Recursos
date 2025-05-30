@@ -9,11 +9,11 @@ import lombok.NoArgsConstructor;
  * Entidad que representa una solicitud recurso.
  * Contiene información básica de identificación y ubicación.
  */
-@NoArgsConstructor // Genera constructor sin argumentos
-@AllArgsConstructor // Genera constructor con todos los argumentos
-@Data // Genera getters, setters, toString, equals y hashCode
-@Entity // Indica que es una entidad persistente
-@Table(name = "solicitud_recurso") // Nombre de la tabla en la base de datos
+@NoArgsConstructor
+@AllArgsConstructor
+@Data
+@Entity
+@Table(name = "solicitud_recurso")
 public class SolicitudRecurso {
 
     /**
@@ -33,16 +33,32 @@ public class SolicitudRecurso {
     @Column(length = 50, nullable = false)
     private String Titulo;
 
+    /**
+     * Detalle de la solicitud
+     * - Máximo 400 caracteres
+     * - No puede ser nulo
+     */
     @Column(length = 400, nullable = false)
     private String Detalle;
 
+    /**
+     * Bombero que hace la solicitud
+     * Relación uno-a-muchos
+     */
     @OneToOne
     @JoinColumn(name = "bombero_id", referencedColumnName = "id")
     private Bombero bombero;
 
-    @Column(nullable = false)
-    private boolean estado;
+    /**
+     * Estado de la solicitud
+     */
+    @Column(length = 50, nullable = false)
+    private String estado;
 
+    /**
+     * Recurso solicitado
+     * Relación uno-a-muchos
+     */
     @OneToOne
     @JoinColumn(name = "recurso_id", referencedColumnName = "id")
     private Recurso recurso;

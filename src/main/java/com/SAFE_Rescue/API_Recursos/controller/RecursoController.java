@@ -18,6 +18,8 @@ import java.util.NoSuchElementException;
 @RequestMapping("/api-recursos/v1/recursos")
 public class RecursoController {
 
+    // SERVICIOS INYECTADOS
+
     @Autowired
     private RecursoService recursoService;
 
@@ -126,7 +128,7 @@ public class RecursoController {
      * @param tipoRecursoId ID del tipo de recurso a asignar
      * @return ResponseEntity con mensaje de confirmación o error
      */
-    @PostMapping("/{recursoId}/asignar-tipo-equipo/{tipoRecursoId}")
+    @PostMapping("/{recursoId}/asignar-tipo-recurso/{tipoRecursoId}")
     public ResponseEntity<String> asignarTipoRecurso(@PathVariable int recursoId, @PathVariable int tipoRecursoId) {
         try {
             recursoService.asignarTipoRecurso(recursoId, tipoRecursoId);

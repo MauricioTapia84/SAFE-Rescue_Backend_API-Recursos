@@ -18,8 +18,12 @@ import java.util.NoSuchElementException;
 @RequestMapping("/api-recursos/v1/solicitudes-recursos")
 public class SolicitudRecursoController {
 
+    // SERVICIOS INYECTADOS
+
     @Autowired
     private SolicitudRecursoService solicitudRecursoService;
+
+    // OPERACIONES CRUD BÁSICAS
 
     /**
      * Obtiene todas las solicitudes recursos registradas en el sistema.
@@ -62,7 +66,7 @@ public class SolicitudRecursoController {
     public ResponseEntity<String> agregarSolicitud(@RequestBody SolicitudRecurso solicitudRecurso) {
         try {
             solicitudRecursoService.save(solicitudRecurso);
-            return ResponseEntity.status(HttpStatus.CREATED).body("SolicitudRecurso creada con éxito.");
+            return ResponseEntity.status(HttpStatus.CREATED).body("Solicitud Recurso creada con éxito.");
         } catch (RuntimeException e) {
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(e.getMessage());
         } catch (Exception e) {
@@ -114,6 +118,8 @@ public class SolicitudRecursoController {
                     .body("Error interno del servidor.");
         }
     }
+
+    // GESTIÓN DE RELACIONES
 
     /**
      * Asigna un Recurso a una SolicitudRecurso

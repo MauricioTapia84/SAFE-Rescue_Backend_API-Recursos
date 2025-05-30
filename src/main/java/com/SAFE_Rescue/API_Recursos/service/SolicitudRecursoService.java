@@ -23,6 +23,8 @@ import java.util.NoSuchElementException;
 @Service
 public class SolicitudRecursoService {
 
+    // REPOSITORIOS INYECTADOS
+
     @Autowired
     private SolicitudRecursoRepository solicitudRecursoRepository;
 
@@ -97,6 +99,14 @@ public class SolicitudRecursoService {
             }
         }
 
+        if (solicitudRecurso.getEstado() != null) {
+            if (solicitudRecurso.getEstado().length() > 50) {
+                throw new IllegalArgumentException("El estado no puede exceder los 50 caracteres");
+            } else {
+                antiguaSolicitudRecurso.setEstado(solicitudRecurso.getEstado());
+            }
+        }
+
         if (solicitudRecurso.getDetalle() != null) {
             if (solicitudRecurso.getDetalle().length() > 400) {
                 throw new IllegalArgumentException("El Detalle no puede exceder los 400 caracteres");
@@ -131,7 +141,7 @@ public class SolicitudRecursoService {
     }
 
 
-    //Validaciones
+    // MÉTODOS PRIVADOS DE VALIDACIÓN Y UTILIDADES
 
     /**
      * Valida los datos básicos de una solicitud
@@ -148,12 +158,20 @@ public class SolicitudRecursoService {
             throw new IllegalArgumentException("El Detalle de la solicitud recurso es requerido");
         }
 
+        if (solicitudRecurso.getEstado() == null || solicitudRecurso.getEstado().trim().isEmpty()) {
+            throw new IllegalArgumentException("El estado solicitud recurso es requerido");
+        }
+
         if (solicitudRecurso.getDetalle().length() > 400) {
             throw new IllegalArgumentException("El Detalle no puede exceder los 400 caracteres");
         }
 
         if (solicitudRecurso.getTitulo().length() > 50) {
             throw new IllegalArgumentException("El Titulo no puede exceder los 50 caracteres");
+        }
+
+        if (solicitudRecurso.getEstado().length() > 50) {
+            throw new IllegalArgumentException("El Estado no puede exceder los 50 caracteres");
         }
 
         validarBombero(solicitudRecurso.getBombero());
@@ -164,13 +182,9 @@ public class SolicitudRecursoService {
      * Valida los datos de un Bombero
      *
      * @param bombero Bombero a validar
-     * @throws IllegalArgumentException Si la ubicación no cumple con las reglas de validación
+     * @throws IllegalArgumentException Si la Bombero no cumple con las reglas de validación
      */
     private void validarBombero(Bombero bombero) {
-
-        if (bomberoRepository.existsByTelefono(bombero.getTelefono())) {
-            throw new RuntimeException("El Telefono ya existe");
-        }
 
         if (bombero.getTelefono() <= 0) {
             throw new IllegalArgumentException("El Telefono debe ser un número positivo");
@@ -206,6 +220,12 @@ public class SolicitudRecursoService {
 
     }
 
+    /**
+     * Valida los datos de un Recurso
+     *
+     * @param recurso Recurso a validar
+     * @throws IllegalArgumentException Si Recurso no cumple con las reglas de validación
+     */
     private void validarRecurso(Recurso recurso) {
 
         if (recurso.getCantidad() <= 0) {
@@ -225,6 +245,8 @@ public class SolicitudRecursoService {
         }
 
     }
+
+    // MÉTODOS DE ASIGNACIÓN DE RELACIONES
 
     /**
      * Asigna un recurso a una Solicitud de recurso

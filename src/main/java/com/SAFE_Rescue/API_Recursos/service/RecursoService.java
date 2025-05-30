@@ -110,6 +110,14 @@ public class RecursoService {
                 }
             }
 
+            if (recurso.getEstado() != null) {
+                if (recurso.getEstado().length() > 50) {
+                    throw new IllegalArgumentException("El Estado no puede exceder los 50 caracteres");
+                } else {
+                    recursoExistente.setEstado(recurso.getEstado());
+                }
+            }
+
             validarRecurso(recursoExistente);
             return recursoRepository.save(recursoExistente);
         } catch (Exception e) {
@@ -129,24 +137,14 @@ public class RecursoService {
         recursoRepository.deleteById(id);
     }
 
-    // MÉTODOS DE ASIGNACIÓN DE RELACIONES
-
-    /**
-     * Asigna un tipo de recurso a un recurso
-     * @param recursoId ID del recurso
-     * @param tipoRecursoId ID del tipo de recurso
-     */
-    public void asignarTipoRecurso(long recursoId, long tipoRecursoId) {
-        Recurso recurso = recursoRepository.findById(recursoId)
-                .orElseThrow(() -> new RuntimeException("Recurso no encontrado"));
-        TipoRecurso tipoRecurso = tipoRecursoRepository.findById(tipoRecursoId)
-                .orElseThrow(() -> new RuntimeException("Tipo Recurso no encontrado"));
-        recurso.setTipoRecurso(tipoRecurso);
-        recursoRepository.save(recurso);
-    }
 
     // MÉTODOS PRIVADOS DE VALIDACIÓN Y UTILIDADES
 
+    /**
+     * Valida el recurso
+     * @param recurso Recurso
+     * @throws IllegalArgumentException Si el recurso no cumple con las reglas de validación
+     */
     private void validarRecurso(Recurso recurso) {
 
         if (recurso.getCantidad() <= 0) {
@@ -165,6 +163,14 @@ public class RecursoService {
             throw new IllegalArgumentException("El nombre del recurso es requerido");
         }
 
+        if (recurso.getEstado() != null) {
+            if (recurso.getEstado().length() > 50) {
+                throw new RuntimeException("El nombre Estado del recurso excede máximo de caracteres (50)");
+            }
+        } else {
+            throw new IllegalArgumentException("El nombre del Estado es requerido");
+        }
+
         validarTipoRecurso(recurso.getTipoRecurso());
     }
 
@@ -180,6 +186,22 @@ public class RecursoService {
         if (tipoRecurso.getNombre().length() > 50) {
             throw new IllegalArgumentException("El nombre no puede exceder los 50 caracteres");
         }
+    }
+
+    // MÉTODOS DE ASIGNACIÓN DE RELACIONES
+
+    /**
+     * Asigna un tipo de recurso a un recurso
+     * @param recursoId ID del recurso
+     * @param tipoRecursoId ID del tipo de recurso
+     */
+    public void asignarTipoRecurso(long recursoId, long tipoRecursoId) {
+        Recurso recurso = recursoRepository.findById(recursoId)
+                .orElseThrow(() -> new RuntimeException("Recurso no encontrado"));
+        TipoRecurso tipoRecurso = tipoRecursoRepository.findById(tipoRecursoId)
+                .orElseThrow(() -> new RuntimeException("Tipo Recurso no encontrado"));
+        recurso.setTipoRecurso(tipoRecurso);
+        recursoRepository.save(recurso);
     }
 
 }

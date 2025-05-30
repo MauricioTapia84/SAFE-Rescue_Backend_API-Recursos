@@ -10,10 +10,10 @@ import lombok.NoArgsConstructor;
  * Contiene información sobre la composición y estado del recurso.
  */
 @Entity
-@Table(name = "recurso") // Nombre de la tabla en la base de datos
-@NoArgsConstructor // Genera constructor sin argumentos
-@AllArgsConstructor // Genera constructor con todos los argumentos
-@Data // Genera getters, setters, toString, equals y hashCode
+@Table(name = "recurso")
+@NoArgsConstructor
+@AllArgsConstructor
+@Data
 public class Recurso {
 
     /**
@@ -25,8 +25,8 @@ public class Recurso {
 
     /**
      * Nombre descriptivo del recurso
-     * Ejemplos: "Camión bomba", "Recurso de rescate", "Botiquín primeros auxilios"
-     * Debe ser un valor no nulo y con una longitud máxima recomendada de 100 caracteres
+     * Ejemplos: "Recurso de rescate", "Botiquín primeros auxilios"
+     * Debe ser un valor no nulo y con una longitud máxima recomendada de 50 caracteres
      */
     @Column(length = 50, nullable = false)
     private String nombre;
@@ -38,6 +38,13 @@ public class Recurso {
      */
     @Column(unique = true, length = 9, nullable = false)
     private int cantidad;
+
+    /**
+     * Nombre descriptivo del estado del recurso
+     * Debe ser un valor no nulo y con una longitud máxima recomendada de 50 caracteres
+     */
+    @Column(length = 50, nullable = false)
+    private String estado;
 
     /**
      * Tipo de Recurso (especialización)

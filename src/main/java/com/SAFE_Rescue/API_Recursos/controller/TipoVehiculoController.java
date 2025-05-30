@@ -18,8 +18,12 @@ import java.util.NoSuchElementException;
 @RequestMapping("/api-recursos/v1/tipos-vehiculos")
 public class TipoVehiculoController {
 
+    // SERVICIOS INYECTADOS
+
     @Autowired
     private TipoVehiculoService tipoVehiculoService;
+
+    // OPERACIONES CRUD BÁSICAS
 
     /**
      * Obtiene todos los tipos de Vehiculos registrados en el sistema.

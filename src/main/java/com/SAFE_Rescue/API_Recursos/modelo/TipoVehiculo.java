@@ -12,7 +12,7 @@ import lombok.NoArgsConstructor;
  * permitiendo agruparlos por características o funciones específicas.
  * </p>
  *
- * @see Recurso
+ * @see Vehiculo
  */
 @Entity
 @Table(name = "tipo_vehiculo")
@@ -43,6 +43,6 @@ public class TipoVehiculo {
      * </ul>
      *
      */
-    @Column(name = "nombre_vehiculo", length = 50, nullable = false)
+    @Column(name = "nombre_tipo", length = 50, nullable = false)
     private String nombre;
 }
