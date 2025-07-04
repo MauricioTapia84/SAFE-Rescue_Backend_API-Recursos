@@ -45,7 +45,7 @@ public class RecursoService {
      * @return Recurso encontrado
      * @throws NoSuchElementException Si no se encuentra el recurso
      */
-    public Recurso findByID(long id) {
+    public Recurso findById(Integer id) {
         return recursoRepository.findById(id)
                 .orElseThrow(() -> new NoSuchElementException("No se encontró recurso con ID: " + id));
     }
@@ -81,7 +81,7 @@ public class RecursoService {
      * @throws NoSuchElementException Si no se encuentra el recurso a actualizar
      * @throws RuntimeException Si ocurre algún error durante la actualización
      */
-    public Recurso update(Recurso recurso, long id) {
+    public Recurso update(Recurso recurso, Integer id) {
         if (recurso == null) {
             throw new IllegalArgumentException("El recurso no puede ser nulo");
         }
@@ -120,8 +120,12 @@ public class RecursoService {
 
             validarRecurso(recursoExistente);
             return recursoRepository.save(recursoExistente);
-        } catch (Exception e) {
-            throw new RuntimeException("Error al actualizar recurso: " + e.getMessage(), e);
+        }catch (IllegalArgumentException e) {
+            throw new IllegalArgumentException("Error al actualizar el recurso: " + e.getMessage());
+        } catch (NoSuchElementException  f) {
+            throw new NoSuchElementException("Error al actualizar el recurso: " + f.getMessage());
+        } catch (Exception g) {
+            throw new RuntimeException("Error al actualizar el recurso: " + g.getMessage());
         }
     }
 
@@ -130,7 +134,7 @@ public class RecursoService {
      * @param id Identificador del recurso a eliminar
      * @throws NoSuchElementException Si no se encuentra el recurso
      */
-    public void delete(long id) {
+    public void delete(Integer id) {
         if (!recursoRepository.existsById(id)) {
             throw new NoSuchElementException("No se encontró recurso con ID: " + id);
         }
@@ -145,33 +149,44 @@ public class RecursoService {
      * @param recurso Recurso
      * @throws IllegalArgumentException Si el recurso no cumple con las reglas de validación
      */
-    private void validarRecurso(Recurso recurso) {
+    public void validarRecurso(Recurso recurso) {
 
-        if (recurso.getCantidad() <= 0) {
-            throw new IllegalArgumentException("La Cantidad debe ser un número positivo");
-        } else {
-            if (String.valueOf(recurso.getCantidad()).length() > 9) {
-                throw new RuntimeException("El valor cantidad excede máximo de caracteres (9)");
+        try{
+            if (recurso.getCantidad() <= 0) {
+                throw new IllegalArgumentException("La Cantidad debe ser un número positivo");
+            } else {
+                if (String.valueOf(recurso.getCantidad()).length() > 9) {
+                    throw new IllegalArgumentException("El valor cantidad excede máximo de caracteres (9)");
+                }
             }
-        }
 
-        if (recurso.getNombre() != null) {
-            if (recurso.getNombre().length() > 50) {
-                throw new RuntimeException("El valor nombre del recurso excede máximo de caracteres (50)");
+            if (recurso.getNombre() != null) {
+                if (recurso.getNombre().length() > 50) {
+                    throw new IllegalArgumentException("El valor nombre del recurso excede máximo de caracteres (50)");
+                }
+            } else {
+                throw new IllegalArgumentException("El nombre del recurso es requerido");
             }
-        } else {
-            throw new IllegalArgumentException("El nombre del recurso es requerido");
-        }
 
-        if (recurso.getEstado() != null) {
-            if (recurso.getEstado().length() > 50) {
-                throw new RuntimeException("El nombre Estado del recurso excede máximo de caracteres (50)");
+            if (recurso.getEstado() != null) {
+                if (recurso.getEstado().length() > 50) {
+                    throw new IllegalArgumentException("El nombre Estado del recurso excede máximo de caracteres (50)");
+                }
+            } else {
+                throw new IllegalArgumentException("El nombre del Estado es requerido");
             }
-        } else {
-            throw new IllegalArgumentException("El nombre del Estado es requerido");
-        }
 
-        validarTipoRecurso(recurso.getTipoRecurso());
+            if (recurso.getTipoRecurso() == null) {
+                throw new IllegalArgumentException("El tipo de Recurso no puede ser nulo");
+            }else{
+                validarTipoRecurso(recurso.getTipoRecurso());
+            }
+
+        }catch (IllegalArgumentException e) {
+            throw new IllegalArgumentException("Error al validar el vehículo: " + e.getMessage());
+        }catch (Exception f) {
+            throw new RuntimeException("Error al validar el vehículo: " + f.getMessage());
+        }
     }
 
     /**
@@ -179,12 +194,20 @@ public class RecursoService {
      * @param tipoRecurso Tipo de recurso a validar
      * @throws IllegalArgumentException Si el tipo de recurso no cumple con las reglas de validación
      */
-    private void validarTipoRecurso(TipoRecurso tipoRecurso) {
-        if (tipoRecurso.getNombre() == null || tipoRecurso.getNombre().trim().isEmpty()) {
-            throw new IllegalArgumentException("El nombre del Tipo recurso es requerido");
-        }
-        if (tipoRecurso.getNombre().length() > 50) {
-            throw new IllegalArgumentException("El nombre no puede exceder los 50 caracteres");
+    public void validarTipoRecurso(TipoRecurso tipoRecurso) {
+
+        try{
+            if (tipoRecurso.getNombre() == null || tipoRecurso.getNombre().trim().isEmpty()) {
+                throw new IllegalArgumentException("El nombre del Tipo recurso es requerido");
+            }
+            if (tipoRecurso.getNombre().length() > 50) {
+                throw new IllegalArgumentException("El nombre no puede exceder los 50 caracteres");
+            }
+
+        }catch (IllegalArgumentException e) {
+            throw new IllegalArgumentException("Error al validar el Tipo Recurso: " + e.getMessage());
+        }catch (Exception f) {
+            throw new RuntimeException("Error al validar el Tipo Recurso: " + f.getMessage());
         }
     }
 
@@ -195,7 +218,7 @@ public class RecursoService {
      * @param recursoId ID del recurso
      * @param tipoRecursoId ID del tipo de recurso
      */
-    public void asignarTipoRecurso(long recursoId, long tipoRecursoId) {
+    public void asignarTipoRecurso(Integer recursoId, Integer tipoRecursoId) {
         Recurso recurso = recursoRepository.findById(recursoId)
                 .orElseThrow(() -> new RuntimeException("Recurso no encontrado"));
         TipoRecurso tipoRecurso = tipoRecursoRepository.findById(tipoRecursoId)

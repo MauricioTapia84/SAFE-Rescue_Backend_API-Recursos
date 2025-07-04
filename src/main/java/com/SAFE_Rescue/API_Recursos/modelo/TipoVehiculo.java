@@ -4,11 +4,12 @@ import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import io.swagger.v3.oas.annotations.media.Schema;
 
 /**
- * Entidad que representa los diferentes tipos de vehiculos en el sistema.
+ * Entidad que representa los diferentes tipos de vehículos en el sistema.
  * <p>
- * Cada tipos de vehiculos define una categorización particular para los vehiculos operativos,
+ * Cada tipo de vehículo define una categorización particular para los vehículos operativos,
  * permitiendo agruparlos por características o funciones específicas.
  * </p>
  *
@@ -22,17 +23,18 @@ import lombok.NoArgsConstructor;
 public class TipoVehiculo {
 
     /**
-     * Identificador único autoincremental del tipo de equipo.
+     * Identificador único autoincremental del tipo de vehículo.
      * <p>
      * Se genera automáticamente mediante la estrategia IDENTITY de la base de datos.
      * </p>
      */
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private int id;
+    @Schema(description = "Identificador único del tipo de vehículo")
+    private Integer id;
 
     /**
-     * Nombre descriptivo del tipos de vehiculo
+     * Nombre descriptivo del tipo de vehículo.
      * <p>
      * Restricciones:
      * </p>
@@ -41,8 +43,8 @@ public class TipoVehiculo {
      *   <li>No puede ser nulo</li>
      *   <li>Se almacena en la columna 'nombre_tipo'</li>
      * </ul>
-     *
      */
     @Column(name = "nombre_tipo", length = 50, nullable = false)
+    @Schema(description = "Nombre del tipo de vehículo", example = "Vehículo de Rescate", required = true, maxLength = 50)
     private String nombre;
 }

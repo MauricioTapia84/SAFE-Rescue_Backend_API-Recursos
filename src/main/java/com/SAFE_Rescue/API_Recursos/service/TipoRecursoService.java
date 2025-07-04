@@ -36,7 +36,7 @@ public class TipoRecursoService {
      * @return El tipo de recursos encontrado
      * @throws NoSuchElementException Si no se encuentra el tipo de recursos
      */
-    public TipoRecurso findByID(long id) {
+    public TipoRecurso findById(Integer id) {
         return tipoRecursoRepository.findById(id)
                 .orElseThrow(() -> new NoSuchElementException("Tipo de recursos no encontrado con ID: " + id));
     }
@@ -66,7 +66,7 @@ public class TipoRecursoService {
      * @throws NoSuchElementException Si no se encuentra el tipo de recursos
      * @throws IllegalArgumentException Si los datos no pasan las validaciones
      */
-    public TipoRecurso update(TipoRecurso tipoRecurso, long id) {
+    public TipoRecurso update(TipoRecurso tipoRecurso, Integer id) {
         TipoRecurso tipoExistente = tipoRecursoRepository.findById(id)
                 .orElseThrow(() -> new NoSuchElementException("Tipo de recursos no encontrado con ID: " + id));
 
@@ -86,7 +86,7 @@ public class TipoRecursoService {
      * @param id ID del tipo de recurso a eliminar
      * @throws NoSuchElementException Si no se encuentra el tipo de recurso
      */
-    public void delete(long id) {
+    public void delete(Integer id) {
         if (!tipoRecursoRepository.existsById(id)) {
             throw new NoSuchElementException("Tipo de recurso no encontrado con ID: " + id);
         }
@@ -100,7 +100,7 @@ public class TipoRecursoService {
      * @param tipoRecurso Tipo de recurso a validar
      * @throws IllegalArgumentException Si el tipo de recurso no cumple con las reglas de validación
      */
-    private void validarTipoRecurso(TipoRecurso tipoRecurso) {
+    public void validarTipoRecurso(TipoRecurso tipoRecurso) {
         if (tipoRecurso.getNombre() == null || tipoRecurso.getNombre().trim().isEmpty()) {
             throw new IllegalArgumentException("El nombre del Tipo recurso es requerido");
         }

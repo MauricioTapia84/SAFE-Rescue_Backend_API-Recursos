@@ -9,7 +9,7 @@ import org.springframework.stereotype.Repository;
  * Maneja operaciones CRUD desde la base de datos usando Jakarta
  */
 @Repository
-public interface BomberoRepository extends JpaRepository<Bombero, Long>{
+public interface BomberoRepository extends JpaRepository<Bombero, Integer>{
 
 }
 

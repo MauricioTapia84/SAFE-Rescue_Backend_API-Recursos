@@ -53,7 +53,7 @@ public class SolicitudRecursoService {
      * @return La solicitud encontrada
      * @throws NoSuchElementException Si no se encuentra la solicitud
      */
-    public SolicitudRecurso findByID(long id) {
+    public SolicitudRecurso findById(Integer id) {
         return solicitudRecursoRepository.findById(id)
                 .orElseThrow(() -> new NoSuchElementException("Solicitud de recurso no encontrada con ID: " + id));
     }
@@ -86,7 +86,7 @@ public class SolicitudRecursoService {
      * @throws NoSuchElementException   Si no se encuentra la solicitud con el ID especificado
      * @throws IllegalArgumentException Si los datos no pasan las validaciones
      */
-    public SolicitudRecurso update(SolicitudRecurso solicitudRecurso, long id) {
+    public SolicitudRecurso update(SolicitudRecurso solicitudRecurso, Integer id) {
         SolicitudRecurso antiguaSolicitudRecurso = solicitudRecursoRepository.findById(id)
                 .orElseThrow(() -> new NoSuchElementException("Solicitud de recurso no encontrada con ID: " + id));
 
@@ -133,7 +133,7 @@ public class SolicitudRecursoService {
      * @param id ID de la solicitud a eliminar
      * @throws NoSuchElementException Si no se encuentra la solicitud
      */
-    public void delete(long id) {
+    public void delete(Integer id) {
         if (!solicitudRecursoRepository.existsById(id)) {
             throw new NoSuchElementException("Solicitud de recurso no encontrada con ID: " + id);
         }
@@ -149,7 +149,7 @@ public class SolicitudRecursoService {
      * @param solicitudRecurso solicitud a validar
      * @throws IllegalArgumentException Si la solicitud no cumple con las reglas de validación
      */
-    private void validarSolicitud(SolicitudRecurso solicitudRecurso) {
+    public void validarSolicitud(SolicitudRecurso solicitudRecurso) {
         if (solicitudRecurso.getTitulo() == null || solicitudRecurso.getTitulo().trim().isEmpty()) {
             throw new IllegalArgumentException("El Titulo de la solicitud recurso es requerido");
         }
@@ -184,7 +184,7 @@ public class SolicitudRecursoService {
      * @param bombero Bombero a validar
      * @throws IllegalArgumentException Si la Bombero no cumple con las reglas de validación
      */
-    private void validarBombero(Bombero bombero) {
+    public void validarBombero(Bombero bombero) {
 
         if (bombero.getTelefono() <= 0) {
             throw new IllegalArgumentException("El Telefono debe ser un número positivo");
@@ -226,7 +226,7 @@ public class SolicitudRecursoService {
      * @param recurso Recurso a validar
      * @throws IllegalArgumentException Si Recurso no cumple con las reglas de validación
      */
-    private void validarRecurso(Recurso recurso) {
+    public void validarRecurso(Recurso recurso) {
 
         if (recurso.getCantidad() <= 0) {
             throw new IllegalArgumentException("La Cantidad debe ser un número positivo");
@@ -253,7 +253,7 @@ public class SolicitudRecursoService {
      * @param solicitudRecursoId ID de la Solicitud Recurso
      * @param recursoId ID del recurso
      */
-    public void asignarRecurso(long solicitudRecursoId, long recursoId) {
+    public void asignarRecurso(Integer solicitudRecursoId, Integer recursoId) {
         SolicitudRecurso solicitudRecurso = solicitudRecursoRepository.findById(solicitudRecursoId)
                 .orElseThrow(() -> new RuntimeException("Solicitud Recurso no encontrada"));
         Recurso recurso = recursoRepository.findById(recursoId)
@@ -267,7 +267,7 @@ public class SolicitudRecursoService {
      * @param solicitudRecursoId ID de la Solicitud Recurso
      * @param bomberoId ID del bombero
      */
-    public void asignarBombero(long solicitudRecursoId, long bomberoId) {
+    public void asignarBombero(Integer solicitudRecursoId, Integer bomberoId) {
         SolicitudRecurso solicitudRecurso = solicitudRecursoRepository.findById(solicitudRecursoId)
                 .orElseThrow(() -> new RuntimeException("Solicitud Recurso no encontrada"));
         Bombero bombero = bomberoRepository.findById(bomberoId)
@@ -275,9 +275,6 @@ public class SolicitudRecursoService {
         solicitudRecurso.setBombero(bombero);
         solicitudRecursoRepository.save(solicitudRecurso);
     }
-
-
-
 
 }
 

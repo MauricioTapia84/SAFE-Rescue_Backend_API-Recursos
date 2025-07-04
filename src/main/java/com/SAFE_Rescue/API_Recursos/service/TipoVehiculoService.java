@@ -36,7 +36,7 @@ public class TipoVehiculoService {
      * @return El tipo de Vehiculos encontrado
      * @throws NoSuchElementException Si no se encuentra el tipo de Vehiculos
      */
-    public TipoVehiculo findByID(long id) {
+    public TipoVehiculo findById(Integer id) {
         return tipoVehiculoRepository.findById(id)
                 .orElseThrow(() -> new NoSuchElementException("Tipo de Vehiculos no encontrado con ID: " + id));
     }
@@ -66,7 +66,7 @@ public class TipoVehiculoService {
      * @throws NoSuchElementException Si no se encuentra el tipo de Vehiculo
      * @throws IllegalArgumentException Si los datos no pasan las validaciones
      */
-    public TipoVehiculo update(TipoVehiculo tipoVehiculo, long id) {
+    public TipoVehiculo update(TipoVehiculo tipoVehiculo, Integer id) {
         TipoVehiculo tipoExistente = tipoVehiculoRepository.findById(id)
                 .orElseThrow(() -> new NoSuchElementException("Tipo de Vehiculo no encontrado con ID: " + id));
 
@@ -86,7 +86,7 @@ public class TipoVehiculoService {
      * @param id ID del tipo de Vehiculo a eliminar
      * @throws NoSuchElementException Si no se encuentra el tipo de Vehiculo
      */
-    public void delete(long id) {
+    public void delete(Integer id) {
         if (!tipoVehiculoRepository.existsById(id)) {
             throw new NoSuchElementException("Tipo de Vehiculo no encontrado con ID: " + id);
         }
@@ -100,7 +100,7 @@ public class TipoVehiculoService {
      * @param tipoVehiculo Tipo de Vehiculo a validar
      * @throws IllegalArgumentException Si el tipo de Vehiculo no cumple con las reglas de validación
      */
-    private void validarTipoVehiculo(TipoVehiculo tipoVehiculo) {
+    public void validarTipoVehiculo(TipoVehiculo tipoVehiculo) {
         if (tipoVehiculo.getNombre() == null || tipoVehiculo.getNombre().trim().isEmpty()) {
             throw new IllegalArgumentException("El nombre del Tipo Vehiculo es requerido");
         }

@@ -9,7 +9,7 @@ import org.springframework.stereotype.Repository;
  * Maneja operaciones CRUD desde la base de datos usando Jakarta
  */
 @Repository
-public interface SolicitudRecursoRepository extends JpaRepository<SolicitudRecurso, Long> {
+public interface SolicitudRecursoRepository extends JpaRepository<SolicitudRecurso, Integer> {
 
 
 }

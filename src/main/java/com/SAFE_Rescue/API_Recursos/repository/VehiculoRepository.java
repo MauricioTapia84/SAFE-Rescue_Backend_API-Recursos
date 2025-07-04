@@ -9,7 +9,7 @@ import org.springframework.stereotype.Repository;
  * Maneja operaciones CRUD desde la base de datos usando Jakarta
  */
 @Repository
-public interface VehiculoRepository extends JpaRepository<Vehiculo, Long> {
+public interface VehiculoRepository extends JpaRepository<Vehiculo, Integer> {
 
     boolean existsByPatente(String Patente);
 }

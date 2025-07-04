@@ -4,11 +4,12 @@ import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import io.swagger.v3.oas.annotations.media.Schema;
 
 /**
  * Entidad que representa los diferentes tipos de recursos en el sistema.
  * <p>
- * Cada tipos de recursos define una categorización particular para los recursos operativos,
+ * Cada tipo de recurso define una categorización particular para los recursos operativos,
  * permitiendo agruparlos por características o funciones específicas.
  * </p>
  *
@@ -29,10 +30,11 @@ public class TipoRecurso {
      */
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private int id;
+    @Schema(description = "Identificador único del tipo de recurso")
+    private Integer id;
 
     /**
-     * Nombre descriptivo del tipos de recursos
+     * Nombre descriptivo del tipo de recurso.
      * <p>
      * Restricciones:
      * </p>
@@ -45,6 +47,6 @@ public class TipoRecurso {
      * <p>Ejemplos: "Recurso de Rescate", "Recurso de Primeros Auxilios", "Recurso de Materiales Peligrosos"</p>
      */
     @Column(name = "nombre_tipo", length = 50, nullable = false)
+    @Schema(description = "Nombre del tipo de recurso", example = "Recurso de Rescate", required = true, maxLength = 50)
     private String nombre;
-
 }

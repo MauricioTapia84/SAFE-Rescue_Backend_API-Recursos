@@ -11,15 +11,14 @@ import java.util.List;
 import java.util.NoSuchElementException;
 
 /**
- * Controlador REST para la gestión de recursos
- * Proporciona endpoints para operaciones CRUD y gestión de relaciones de recursos
+ * Controlador REST para la gestión de recursos.
+ * Proporciona endpoints para operaciones CRUD y gestión de relaciones de recursos.
  */
 @RestController
 @RequestMapping("/api-recursos/v1/recursos")
 public class RecursoController {
 
     // SERVICIOS INYECTADOS
-
     @Autowired
     private RecursoService recursoService;
 
@@ -30,31 +29,28 @@ public class RecursoController {
      * @return ResponseEntity con lista de recursos o estado NO_CONTENT si no hay registros
      */
     @GetMapping
-    public ResponseEntity<List<Recurso>> listar(){
-
+    public ResponseEntity<List<Recurso>> listar() {
         List<Recurso> recursos = recursoService.findAll();
-        if(recursos.isEmpty()){
+        if (recursos.isEmpty()) {
             return new ResponseEntity<>(HttpStatus.NO_CONTENT);
         }
         return ResponseEntity.ok(recursos);
     }
 
     /**
-     * Busca un recursos por su ID.
-     * @param id ID del recursos a buscar
-     * @return ResponseEntity con el recursos encontrado o mensaje de error
+     * Busca un recurso por su ID.
+     * @param id ID del recurso a buscar
+     * @return ResponseEntity con el recurso encontrado o mensaje de error
      */
     @GetMapping("/{id}")
-    public ResponseEntity<?> buscarRecurso(@PathVariable long id) {
+    public ResponseEntity<?> buscarRecurso(@PathVariable Integer id) {
         Recurso recurso;
-
         try {
-            recurso = recursoService.findByID(id);
-        }catch(NoSuchElementException e){
+            recurso = recursoService.findById(id);
+        } catch (NoSuchElementException e) {
             return new ResponseEntity<String>("Recurso no encontrado", HttpStatus.NOT_FOUND);
         }
         return ResponseEntity.ok(recurso);
-
     }
 
     /**
@@ -81,7 +77,7 @@ public class RecursoController {
      * @return ResponseEntity con mensaje de confirmación o error
      */
     @PutMapping("/{id}")
-    public ResponseEntity<String> actualizarRecurso(@PathVariable long id, @RequestBody Recurso recurso) {
+    public ResponseEntity<String> actualizarRecurso(@PathVariable Integer id, @RequestBody Recurso recurso) {
         try {
             Recurso nuevoRecurso = recursoService.update(recurso, id);
             return ResponseEntity.ok("Actualizado con éxito");
@@ -103,7 +99,7 @@ public class RecursoController {
      * @return ResponseEntity con mensaje de confirmación
      */
     @DeleteMapping("/{id}")
-    public ResponseEntity<String> eliminarRecurso(@PathVariable long id) {
+    public ResponseEntity<String> eliminarRecurso(@PathVariable Integer id) {
         try {
             recursoService.delete(id);
             return ResponseEntity.ok("Recurso eliminado con éxito.");
@@ -119,11 +115,10 @@ public class RecursoController {
         }
     }
 
-
     // GESTIÓN DE RELACIONES
 
     /**
-     * Asigna un tipo de recurso a un recurso
+     * Asigna un tipo de recurso a un recurso.
      * @param recursoId ID del recurso
      * @param tipoRecursoId ID del tipo de recurso a asignar
      * @return ResponseEntity con mensaje de confirmación o error
@@ -137,5 +132,4 @@ public class RecursoController {
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body(e.getMessage());
         }
     }
-
 }

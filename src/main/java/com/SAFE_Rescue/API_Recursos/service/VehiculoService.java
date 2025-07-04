@@ -45,7 +45,7 @@ public class VehiculoService {
      * @return Vehiculo encontrado
      * @throws NoSuchElementException Si no se encuentra el vehiculo
      */
-    public Vehiculo findByID(long id) {
+    public Vehiculo findById(Integer id) {
         return vehiculoRepository.findById(id)
                 .orElseThrow(() -> new NoSuchElementException("No se encontró vehiculo con ID: " + id));
     }
@@ -82,7 +82,7 @@ public class VehiculoService {
      * @throws NoSuchElementException Si no se encuentra el vehiculo a actualizar
      * @throws RuntimeException Si ocurre algún error durante la actualización
      */
-    public Vehiculo update(Vehiculo vehiculo, long id) {
+    public Vehiculo update(Vehiculo vehiculo, Integer id) {
         if (vehiculo == null) {
             throw new IllegalArgumentException("El vehiculo no puede ser nulo");
         }
@@ -145,8 +145,12 @@ public class VehiculoService {
             }
 
             return vehiculoRepository.save(vehiculoExistente);
-        } catch (Exception e) {
-            throw new RuntimeException("Error al actualizar vehiculo: " + e.getMessage(), e);
+        }catch (IllegalArgumentException e) {
+            throw new IllegalArgumentException("Error al actualizar el vehículo: " + e.getMessage());
+        } catch (NoSuchElementException  f) {
+            throw new NoSuchElementException("Error al actualizar el vehículo: " + f.getMessage());
+        } catch (Exception g) {
+            throw new RuntimeException("Error al actualizar el vehículo: " + g.getMessage());
         }
     }
 
@@ -155,7 +159,7 @@ public class VehiculoService {
      * @param id Identificador del vehiculo a eliminar
      * @throws NoSuchElementException Si no se encuentra el vehiculo
      */
-    public void delete(long id) {
+    public void delete(Integer id) {
         if (!vehiculoRepository.existsById(id)) {
             throw new NoSuchElementException("No se encontró vehiculo con ID: " + id);
         }
@@ -170,43 +174,59 @@ public class VehiculoService {
      * @param vehiculo Vehiculo a validar
      * @throws IllegalArgumentException Si el Vehiculo no cumple con las reglas de validación
      */
-    private void validarVehiculo(Vehiculo vehiculo) {
+    public void validarVehiculo(Vehiculo vehiculo) {
 
-        if (vehiculoRepository.existsByPatente(vehiculo.getPatente())) {
-            throw new RuntimeException("La Patente ya existe");
-        }
-
-        if (vehiculo.getMarca() != null) {
-            if (vehiculo.getMarca().length() > 50) {
-                throw new IllegalArgumentException("La Marca no puede exceder los 50 caracteres");
+        try {
+            if (vehiculoRepository.existsByPatente(vehiculo.getPatente())) {
+                throw new RuntimeException("La Patente ya existe");
             }
-        }
 
-        if (vehiculo.getModelo() != null) {
-            if (vehiculo.getModelo().length() > 50) {
-                throw new IllegalArgumentException("El Modelo no puede exceder los 50 caracteres");
+            if (vehiculo.getMarca() != null) {
+                if (vehiculo.getMarca().length() > 50) {
+                    throw new IllegalArgumentException("La Marca no puede exceder los 50 caracteres");
+                }
+            }else{
+                throw new IllegalArgumentException("La marca no puede ser nula");
             }
-        }
 
-        if (vehiculo.getEstado() != null) {
-            if (vehiculo.getEstado().length() > 50) {
-                throw new IllegalArgumentException("El Estado no puede exceder los 50 caracteres");
+            if (vehiculo.getModelo() != null) {
+                if (vehiculo.getModelo().length() > 50) {
+                    throw new IllegalArgumentException("El Modelo no puede exceder los 50 caracteres");
+                }
+            }else{
+                throw new IllegalArgumentException("El modelo no puede ser nulo");
             }
-        }
 
-        if (vehiculo.getConductor() != null) {
-            if (vehiculo.getConductor().length() > 50) {
-                throw new IllegalArgumentException("El Conductor no puede exceder los 50 caracteres");
+            if (vehiculo.getEstado() != null) {
+                if (vehiculo.getEstado().length() > 50) {
+                    throw new IllegalArgumentException("El Estado no puede exceder los 50 caracteres");
+                }
+            }else{
+                throw new IllegalArgumentException("El estado no puede ser nulo");
             }
-        }
 
-        if (vehiculo.getPatente() != null) {
-            if (vehiculo.getPatente().length() > 6) {
-                throw new IllegalArgumentException("La patente no puede exceder los 6 caracteres");
+            if (vehiculo.getConductor() != null) {
+                if (vehiculo.getConductor().length() > 50) {
+                    throw new IllegalArgumentException("El Conductor no puede exceder los 50 caracteres");
+                }
+            }else{
+                throw new IllegalArgumentException("El conductor no pude ser nulo");
             }
-        }
 
-        validarTipoVehiculo(vehiculo.getTipoVehiculo());
+            if (vehiculo.getPatente() != null) {
+                if (vehiculo.getPatente().length() > 6) {
+                    throw new IllegalArgumentException("La patente no puede exceder los 6 caracteres");
+                }
+            }else{
+                throw new IllegalArgumentException("La patente no pude ser nula");
+            }
+
+            validarTipoVehiculo(vehiculo.getTipoVehiculo());
+        }catch (IllegalArgumentException e) {
+            throw new IllegalArgumentException("Error al validar el vehículo: " + e.getMessage());
+        }catch (Exception f) {
+            throw new RuntimeException("Error al validar el vehículo: " + f.getMessage());
+        }
     }
 
     /**
@@ -221,6 +241,8 @@ public class VehiculoService {
         if (tipoVehiculo.getNombre().length() > 50) {
             throw new IllegalArgumentException("El nombre no puede exceder los 50 caracteres");
         }
+
+
     }
 
     // MÉTODOS DE ASIGNACIÓN DE RELACIONES
@@ -230,7 +252,7 @@ public class VehiculoService {
      * @param vehiculoId ID del rvehiculo
      * @param tipoVehiculoId ID del tipo de vehiculo
      */
-    public void asignarTipoVehiculo(long vehiculoId, long tipoVehiculoId) {
+    public void asignarTipoVehiculo(Integer vehiculoId, Integer tipoVehiculoId) {
         Vehiculo vehiculo = vehiculoRepository.findById(vehiculoId)
                 .orElseThrow(() -> new RuntimeException("Vehiculo no encontrado"));
         TipoVehiculo tipoVehiculo = tipoVehiculoRepository.findById(tipoVehiculoId)

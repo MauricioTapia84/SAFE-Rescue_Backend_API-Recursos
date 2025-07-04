@@ -9,6 +9,6 @@ import org.springframework.stereotype.Repository;
  * Maneja operaciones CRUD desde la base de datos usando Jakarta
  */
 @Repository
-public interface TipoVehiculoRepository extends JpaRepository<TipoVehiculo, Long> {
+public interface TipoVehiculoRepository extends JpaRepository<TipoVehiculo, Integer> {
 
 }

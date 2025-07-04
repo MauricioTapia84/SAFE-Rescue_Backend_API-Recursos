@@ -9,17 +9,19 @@ import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 import java.util.NoSuchElementException;
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.responses.ApiResponse;
+import io.swagger.v3.oas.annotations.responses.ApiResponses;
 
 /**
- * Controlador REST para la gestión de tipos de recursos
- * Proporciona endpoints para operaciones CRUD de tipos de recursos
+ * Controlador REST para la gestión de tipos de recursos.
+ * Proporciona endpoints para operaciones CRUD de tipos de recursos.
  */
 @RestController
 @RequestMapping("/api-recursos/v1/tipos-recursos")
 public class TipoRecursoController {
 
     // SERVICIOS INYECTADOS
-
     @Autowired
     private TipoRecursoService tipoRecursoService;
 
@@ -30,9 +32,14 @@ public class TipoRecursoController {
      * @return ResponseEntity con lista de tipos de recursos o estado NO_CONTENT si no hay registros
      */
     @GetMapping
+    @Operation(summary = "Obtener todos los tipos de recursos", description = "Devuelve una lista de todos los tipos de recursos registrados.")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "Lista de tipos de recursos encontrada"),
+            @ApiResponse(responseCode = "204", description = "No hay tipos de recursos registrados")
+    })
     public ResponseEntity<List<TipoRecurso>> listarTiposRecursos() {
         List<TipoRecurso> tipoRecurso = tipoRecursoService.findAll();
-        if(tipoRecurso.isEmpty()) {
+        if (tipoRecurso.isEmpty()) {
             return new ResponseEntity<>(HttpStatus.NO_CONTENT);
         }
         return ResponseEntity.ok(tipoRecurso);
@@ -44,22 +51,33 @@ public class TipoRecursoController {
      * @return ResponseEntity con el tipo de recurso encontrado o mensaje de error
      */
     @GetMapping("/{id}")
-    public ResponseEntity<?> buscarTipoRecurso(@PathVariable int id) {
+    @Operation(summary = "Buscar tipo de recurso por ID", description = "Devuelve un tipo de recurso específico dado su ID.")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "Tipo de recurso encontrado"),
+            @ApiResponse(responseCode = "404", description = "Tipo de recurso no encontrado")
+    })
+    public ResponseEntity<?> buscarTipoRecurso(@PathVariable Integer id) {
         TipoRecurso tipoRecurso;
         try {
-            tipoRecurso = tipoRecursoService.findByID(id);
-        } catch(NoSuchElementException e) {
+            tipoRecurso = tipoRecursoService.findById(id);
+        } catch (NoSuchElementException e) {
             return new ResponseEntity<String>("Tipo Recurso no encontrado", HttpStatus.NOT_FOUND);
         }
         return ResponseEntity.ok(tipoRecurso);
     }
 
     /**
-     * Crea un nuevo tipo de recurso
+     * Crea un nuevo tipo de recurso.
      * @param tipoRecurso Datos del tipo de recurso a crear
      * @return ResponseEntity con mensaje de confirmación o error
      */
     @PostMapping
+    @Operation(summary = "Crear nuevo tipo de recurso", description = "Crea un nuevo tipo de recurso en el sistema.")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "201", description = "Tipo de recurso creado con éxito"),
+            @ApiResponse(responseCode = "400", description = "Error de validación"),
+            @ApiResponse(responseCode = "500", description = "Error interno del servidor")
+    })
     public ResponseEntity<String> agregarTipoRecurso(@RequestBody TipoRecurso tipoRecurso) {
         try {
             tipoRecursoService.save(tipoRecurso);
@@ -78,19 +96,23 @@ public class TipoRecursoController {
      * @return ResponseEntity con mensaje de confirmación o error
      */
     @PutMapping("/{id}")
-    public ResponseEntity<String> actualizarTipoRecurso(@PathVariable long id, @RequestBody TipoRecurso tipoRecurso) {
+    @Operation(summary = "Actualizar tipo de recurso", description = "Actualiza la información de un tipo de recurso existente.")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "Tipo de recurso actualizado con éxito"),
+            @ApiResponse(responseCode = "404", description = "Tipo de recurso no encontrado"),
+            @ApiResponse(responseCode = "400", description = "Error de validación"),
+            @ApiResponse(responseCode = "500", description = "Error interno del servidor")
+    })
+    public ResponseEntity<String> actualizarTipoRecurso(@PathVariable Integer id, @RequestBody TipoRecurso tipoRecurso) {
         try {
             TipoRecurso nuevoTipoRecurso = tipoRecursoService.update(tipoRecurso, id);
             return ResponseEntity.ok("Actualizado con éxito");
         } catch (NoSuchElementException e) {
-            return ResponseEntity.status(HttpStatus.NOT_FOUND)
-                    .body("Tipo Recurso no encontrado");
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Tipo Recurso no encontrado");
         } catch (RuntimeException e) {
-            return ResponseEntity.status(HttpStatus.BAD_REQUEST)
-                    .body(e.getMessage());
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(e.getMessage());
         } catch (Exception e) {
-            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
-                    .body("Error interno del servidor.");
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Error interno del servidor.");
         }
     }
 
@@ -100,19 +122,23 @@ public class TipoRecursoController {
      * @return ResponseEntity con mensaje de confirmación
      */
     @DeleteMapping("/{id}")
-    public ResponseEntity<String> eliminarTipoEquipo(@PathVariable long id) {
+    @Operation(summary = "Eliminar tipo de recurso", description = "Elimina un tipo de recurso del sistema dado su ID.")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "Tipo de recurso eliminado con éxito"),
+            @ApiResponse(responseCode = "404", description = "Tipo de recurso no encontrado"),
+            @ApiResponse(responseCode = "400", description = "Error de validación"),
+            @ApiResponse(responseCode = "500", description = "Error interno del servidor")
+    })
+    public ResponseEntity<String> eliminarTipoEquipo(@PathVariable Integer id) {
         try {
             tipoRecursoService.delete(id);
             return ResponseEntity.ok("Tipo Recurso eliminado con éxito.");
         } catch (NoSuchElementException e) {
-            return ResponseEntity.status(HttpStatus.NOT_FOUND)
-                    .body("Tipo Recurso no encontrado");
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Tipo Recurso no encontrado");
         } catch (RuntimeException e) {
-            return ResponseEntity.status(HttpStatus.BAD_REQUEST)
-                    .body(e.getMessage());
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(e.getMessage());
         } catch (Exception e) {
-            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
-                    .body("Error interno del servidor.");
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Error interno del servidor.");
         }
     }
 }
