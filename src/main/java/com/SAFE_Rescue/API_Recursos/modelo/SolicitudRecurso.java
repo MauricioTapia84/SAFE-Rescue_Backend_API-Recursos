@@ -50,7 +50,7 @@ public class SolicitudRecurso {
      * Bombero que hace la solicitud.
      * Relación uno-a-uno.
      */
-    @OneToOne
+    @ManyToOne
     @JoinColumn(name = "bombero_id", referencedColumnName = "id")
     @Schema(description = "Bombero que realiza la solicitud", required = true)
     private Bombero bombero;
@@ -67,7 +67,7 @@ public class SolicitudRecurso {
      * Recurso solicitado.
      * Relación uno-a-uno.
      */
-    @OneToOne
+    @ManyToOne
     @JoinColumn(name = "recurso_id", referencedColumnName = "id")
     @Schema(description = "Recurso solicitado en la solicitud", required = true)
     private Recurso recurso;
